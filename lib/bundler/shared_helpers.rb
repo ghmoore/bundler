@@ -159,7 +159,7 @@ module Bundler
         next if gemfiles.empty?
         break false if gemfiles.size == 1
       end
-      return unless multiple_gemfiles && Bundler.bundler_major_version == 1
+      return unless multiple_gemfiles && Bundler.bundler_major_version == 2
       Bundler::SharedHelpers.major_deprecation 2, \
         "gems.rb and gems.locked will be preferred to Gemfile and Gemfile.lock."
     end

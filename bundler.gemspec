@@ -49,7 +49,6 @@ Gem::Specification.new do |s|
 
   base_dir = File.dirname(__FILE__).gsub(%r{([^A-Za-z0-9_\-.,:\/@\n])}, "\\\\\\1")
   s.files = IO.popen("git -C #{base_dir} ls-files -z", &:read).split("\x0").select {|f| f.match(%r{^(lib|exe)/}) }
-
   # we don't check in man pages, but we need to ship them because
   # we use them to generate the long-form help for each command.
   s.files += Dir.glob("man/**/*")

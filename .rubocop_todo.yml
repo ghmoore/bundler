@@ -13,7 +13,7 @@
 Layout/IndentArray:
   EnforcedStyle: consistent
 
-# Offense count: 40
+# Offense count: 48
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: auto_detection, squiggly, active_support, powerpack, unindent
@@ -102,11 +102,10 @@ Lint/UselessAccessModifier:
   Exclude:
     - 'lib/bundler/fetcher.rb'
 
-# Offense count: 6
+# Offense count: 1
 Lint/UselessAssignment:
   Exclude:
     - 'lib/bundler/index.rb'
-    - 'lib/bundler/installer.rb'
 
 # Offense count: 2564
 # Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
@@ -204,7 +203,7 @@ Style/CaseEquality:
     - 'lib/bundler/match_platform.rb'
     - 'lib/bundler/rubygems_ext.rb'
 
-# Offense count: 27
+# Offense count: 28
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: nested, compact
 Style/ClassAndModuleChildren:
@@ -334,6 +333,7 @@ Style/MultilineIfModifier:
 Style/NumericPredicate:
   Exclude:
     - 'spec/**/*'
+    - 'lib/bundler/cli/common.rb'
     - 'lib/bundler/gem_helper.rb'
     - 'lib/bundler/mirror.rb'
     - 'lib/bundler/source/path.rb'

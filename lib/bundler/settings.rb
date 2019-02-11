@@ -40,6 +40,7 @@ module Bundler
       ignore_messages
       init_gems_rb
       list_command
+      lockfile_upgrade_warning
       lockfile_uses_separate_rubygems_sources
       no_install
       no_prune
@@ -115,7 +116,7 @@ module Bundler
           "bundle config set #{key} #{Array(value).join(":")}"
         end
 
-        Bundler::SharedHelpers.major_deprecation 2,\
+        Bundler::SharedHelpers.major_deprecation 3,\
           "flags passed to commands " \
           "will no longer be automatically remembered. Instead please set flags " \
           "you want remembered between commands using `bundle config set " \
