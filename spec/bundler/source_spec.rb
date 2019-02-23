@@ -57,7 +57,6 @@ RSpec.describe Bundler::Source do
           let(:locked_gem) { double(:locked_gem, :name => "nokogiri", :version => "< 1.5") }
 
           context "with color" do
-            before { $stdout = STDOUT }
             before { Bundler.ui = Bundler::UI::Shell.new }
 
             it "should return a string with the spec name and version and locked spec version" do
