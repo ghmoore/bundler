@@ -247,7 +247,6 @@ RSpec.describe "bundle install with gems on multiple sources" do
           end
 
           it "installs from the other source and warns about ambiguous gems", :bundler => "< 3" do
-            bundle "config major_deprecations true"
             bundle :install
             expect(out).to have_major_deprecation a_string_including("Your Gemfile contains multiple primary sources.")
             expect(err).to include("Warning: the gem 'rack' was found in multiple sources.")
