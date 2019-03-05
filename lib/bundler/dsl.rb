@@ -45,7 +45,7 @@ module Bundler
       @gemfiles << expanded_gemfile_path
       contents ||= Bundler.read_file(@gemfile.to_s)
       instance_eval(contents.dup.untaint, gemfile.to_s, 1)
-    rescue Exception => e
+    rescue Exception => e # rubocop:disable Lint/RescueException
       message = "There was an error " \
         "#{e.is_a?(GemfileEvalError) ? "evaluating" : "parsing"} " \
         "`#{File.basename gemfile.to_s}`: #{e.message}"
@@ -441,10 +441,10 @@ repo_name ||= user_name
       message = String.new
       message << "You passed #{invalid_keys.map {|k| ":" + k }.join(", ")} "
       message << if invalid_keys.size > 1
-                   "as options for #{command}, but they are invalid."
-                 else
-                   "as an option for #{command}, but it is invalid."
-                 end
+        "as options for #{command}, but they are invalid."
+      else
+        "as an option for #{command}, but it is invalid."
+      end
 
       message << " Valid options are: #{valid_keys.join(", ")}."
       message << " You may be able to resolve this by upgrading Bundler to the newest version."

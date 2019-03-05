@@ -60,7 +60,7 @@ module Spec
       end
     end
 
-    MAJOR_DEPRECATION = /^\[DEPRECATED\]\s*/
+    MAJOR_DEPRECATION = /^\[DEPRECATED\]\s*/.freeze
 
     RSpec::Matchers.define :eq_err do |expected|
       diffable
@@ -74,8 +74,7 @@ module Spec
       match do |actual|
         deprecations = actual.split(MAJOR_DEPRECATION)
 
-        return !expected.nil? if deprecations.size <= 1
-        return true if expected.nil?
+        return !expected.nil? if deprecations.empty?
 
         deprecations.any? do |d|
           !d.empty? && values_match?(expected, d.strip)
@@ -153,7 +152,7 @@ module Spec
           version_const = name == "bundler" ? "Bundler::VERSION" : Spec::Builders.constantize(name)
           begin
             run! "require '#{name}.rb'; puts #{version_const}", *groups
-          rescue => e
+          rescue StandardError => e
             next "#{name} is not installed:\n#{indent(e)}"
           end
           last_command.stdout.gsub!(/#{MAJOR_DEPRECATION}.*$/, "")
@@ -168,7 +167,7 @@ module Spec
           begin
             source_const = "#{Spec::Builders.constantize(name)}_SOURCE"
             run! "require '#{name}/source'; puts #{source_const}", *groups
-          rescue
+          rescue StandardError
             next "#{name} does not have a source defined:\n#{indent(e)}"
           end
           last_command.stdout.gsub!(/#{MAJOR_DEPRECATION}.*$/, "")
@@ -194,7 +193,7 @@ module Spec
                 puts "WIN"
               end
             R
-          rescue => e
+          rescue StandardError => e
             next "checking for #{name} failed:\n#{e}"
           end
           next if last_command.stdout == "WIN"

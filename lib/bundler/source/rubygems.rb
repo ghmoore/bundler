@@ -106,7 +106,7 @@ module Bundler
           end
         end
 
-        if installed?(spec) && !force
+        if (installed?(spec) || Plugin.installed?(spec.name)) && !force
           print_using_message "Using #{version_message(spec)}"
           return nil # no post-install message
         end
@@ -124,7 +124,7 @@ module Bundler
           begin
             s = Bundler.rubygems.spec_from_gem(path, Bundler.settings["trust-policy"])
             spec.__swap__(s)
-          rescue
+          rescue StandardError
             Bundler.rm_rf(path)
             raise
           end

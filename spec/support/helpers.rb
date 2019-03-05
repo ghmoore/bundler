@@ -131,8 +131,6 @@ module Spec
       load_path << spec
       load_path_str = "-I#{load_path.join(File::PATH_SEPARATOR)}"
 
-      env = env.map {|k, v| "#{k}='#{v}'" }.join(" ")
-
       args = options.map do |k, v|
         case v
         when nil
@@ -146,8 +144,8 @@ module Spec
         end
       end.join
 
-      cmd = "#{env} #{sudo} #{Gem.ruby} #{load_path_str} #{requires_str} #{bundle_bin} #{cmd}#{args}"
-      sys_exec(cmd) {|i, o, thr| yield i, o, thr if block_given? }
+      cmd = "#{sudo} #{Gem.ruby} #{load_path_str} #{requires_str} #{bundle_bin} #{cmd}#{args}"
+      sys_exec(cmd, env) {|i, o, thr| yield i, o, thr if block_given? }
     end
     bang :bundle
 
@@ -216,10 +214,12 @@ module Spec
       "#{Gem.ruby} -S #{ENV["GEM_PATH"]}/bin/rake"
     end
 
-    def sys_exec(cmd)
+    def sys_exec(cmd, env = {})
       command_execution = CommandExecution.new(cmd.to_s, Dir.pwd)
 
-      Open3.popen3(cmd.to_s) do |stdin, stdout, stderr, wait_thr|
+      env = env.map {|k, v| [k.to_s, v.to_s] }.to_h # convert env keys and values to string
+
+      Open3.popen3(env, cmd.to_s) do |stdin, stdout, stderr, wait_thr|
         yield stdin, stdout, wait_thr if block_given?
         stdin.close
 
@@ -322,7 +322,7 @@ module Spec
             Dir.chdir(root) { gem_command! :build, gemspec.to_s }
           end
           bundler_path = root + "bundler-#{Bundler::VERSION}.gem"
-        elsif g.to_s =~ %r{\A/.*\.gem\z}
+        elsif g.to_s =~ %r{\A(?:[A-Z]:)?/.*\.gem\z}
           g
         else
           "#{gem_repo}/gems/#{g}.gem"
@@ -573,7 +573,7 @@ module Spec
       tries = 0
       sleep 0.5
       TCPSocket.new(host, port)
-    rescue => e
+    rescue StandardError => e
       raise(e) if tries > (seconds * 2)
       tries += 1
       retry
@@ -583,7 +583,7 @@ module Spec
       port = 21_453
       begin
         port += 1 while TCPSocket.new("127.0.0.1", port)
-      rescue
+      rescue StandardError
         false
       end
       port
